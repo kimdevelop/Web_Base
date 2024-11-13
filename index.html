@@ -7,21 +7,93 @@
       crossorigin="anonymous"
     ></script>
 
+    <!-- GSAP Load -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.9.0/gsap.min.js"></script>
+
     <!-- CSS Load -->
     <link rel="stylesheet" href="css/reset.css" />
     <link rel="stylesheet" href="css/style.css" />
-
-    <!-- script.js Load -->
-    <script src="js/script.js"></script>
   </head>
+
   <body>
     <!-- 이미지 -->
     <img src="img/MoonAndStar.png" class="moon_and_star" />
     <img src="img/MoonLight.png" class="moonlight" />
     <img src="img/cloud.png" class="cloud" />
+    <!-- tuna 이미지 추가 -->
+    <img src="img/Mysteriouse.gif" class="tuna" />
+
+    <!-- 번개와 비 -->
+    <div id="thunderstorm">
+      <div id="lightning"></div>
+    </div>
 
     <!-- 텍스트 -->
+    <div class="pixel-text">Sea in the Pixel</div>
 
-    <div class="pixel-text">Pixel in the Sea</div>
+    <div class="content">
+      <h1>Moon</h1>
+    </div>
+
+    <!-- js 사용 X, 바로 여기에 -->
+    <script>
+      // Configurations
+      const delayRain = 50;
+      const delayThunder = 2000;
+
+      const thunderstorm = document.getElementById("thunderstorm");
+      const lightning = document.getElementById("lightning");
+
+      // Random number generator
+      function random(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      // Create raindrops
+      function createRaindrop() {
+        const raindrop = document.createElement("div");
+        raindrop.className = "raindrop";
+        thunderstorm.appendChild(raindrop);
+
+        const startX = random(0, window.innerWidth);
+        const startY = random(-10, -5);
+        const duration = random(0.5, 2);
+
+        gsap.fromTo(
+          raindrop,
+          { x: startX, y: startY, opacity: 1 },
+          {
+            x: startX + 20,
+            y: window.innerHeight + 20,
+            opacity: 0,
+            duration,
+            ease: "linear",
+            onComplete: () => {
+              thunderstorm.removeChild(raindrop);
+            },
+          }
+        );
+      }
+
+      // Lightning flash animation
+      function createLightning() {
+        gsap.to(lightning, {
+          duration: 0.1,
+          opacity: 1,
+          delay: random(1, 10),
+          onComplete: () => {
+            gsap.to(lightning, {
+              duration: 0.1,
+              opacity: 0,
+              delay: 0.1,
+            });
+          },
+        });
+      }
+
+      // Periodically create raindrops and lightning
+      setInterval(createRaindrop, delayRain);
+      setInterval(createLightning, delayThunder);
+    </script>
   </body>
 </html>
